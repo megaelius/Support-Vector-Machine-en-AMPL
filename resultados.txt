@@ -1,0 +1,7 @@
+
+ + -------------------- RESULTADO DEL PROBLEMA RBF --------------------  +
+
+Resultado de gamma: [[-0.00780889]]
+
+La accuracy es: 92.0%.
+

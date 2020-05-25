@@ -1,0 +1,8 @@
+reset;
+model primal.mod;
+data datos.dat;
+option solver minos;
+
+solve;
+
+display w;
