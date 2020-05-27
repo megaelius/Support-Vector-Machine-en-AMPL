@@ -43,8 +43,8 @@ try:
         y ver cómo de bien clasifica puntos con los que no ha modelado.
     '''
     Atr, ytr = fun.generate_data(option, num_points, seed, nu, swiss)
-    random.seed(time.time())
     if option != 3:
+        random.seed(time.time())
         seed2 = random.randint(0, 1e6)
         if swiss: Ate, yte = fun.generate_swiss(num_points, seed2)
         else: Ate, yte = fun.gensvmdat(num_points, seed2)
