@@ -1,12 +1,14 @@
 from amplpy import AMPL, Environment
-import sys
 import functions as fun
 import numpy as np
+import random
+import time
+import sys
 import os
 
 
 # Path donde está AMPL en nuestro ordenador
-ampl = AMPL(Environment('/home/elias/Escritorio/uni/2º/OM/ampl_linux-intel64'))
+ampl = AMPL(Environment('/home/alex/AMPL/ampl_linux-intel64'))
 
 # Escogemos el solver cplex
 ampl.setOption('solver', 'cplex')
@@ -33,8 +35,19 @@ try:
     nu = float(sys.argv[4])
     swiss = int(sys.argv[5])
 
+    '''
+    Aquí generamos los dos datasets:
+        El de training, para generar el modelo, es decir, w y gamma.
 
-    A, y = fun.generate_data(option, num_points, seed, nu, swiss)
+        El de test, para clasificar nuevos puntos con el modelo anterior
+        y ver cómo de bien clasifica puntos con los que no ha modelado.
+    '''
+    Atr, ytr = fun.generate_data(option, num_points, seed, nu, swiss)
+    random.seed(time.time())
+    if option != 3:
+        seed2 = random.randint(0, 1e6)
+        if swiss: Ate, yte = fun.generate_swiss(num_points, seed2)
+        else: Ate, yte = fun.gensvmdat(num_points, seed2)
 
     # Leemos el modelo y los datos
     if option == 1: ampl.read('./primal.mod')
@@ -59,7 +72,8 @@ try:
         s = np.matrix(s.toPandas())
         s = s.reshape(num_points, 1)
 
-        c1 = fun.primal_classification(A, w, y, gamma, s)
+        ctrain = fun.primal_classification(Atr, w, ytr, gamma)
+
     else:
         la = ampl.getVariable('lambda').getValues()
         la = np.matrix(la.toPandas())
@@ -68,24 +82,28 @@ try:
         K = ampl.getParameter('K').getValues()
         K = np.matrix(K.toPandas())
         K = K.reshape(num_points, num_points)
-        clasif, gamma = fun.dual_classification(la,y,K,nu)
+
+        ctrain, gamma = fun.dual_classification(la, ytr, K, nu)
+        if option == 2:
+            w = fun.dual_w(la, ytr, Atr, nu)
+
+    if option != 3:
+        ctest = fun.primal_classification(Ate, w, yte, gamma)
 
     '''
     Imprimimos los resultados en el archivo resultados.txt
     '''
-    if option == 1:
-        fun.print_to_txt(w = w, gamma = gamma, acc1 = fun.precision(y, c1), s = s, option = 1)
-    elif option == 2:
-        fun.print_to_txt(w = fun.dual_w(la, y, A, nu), gamma = gamma, acc1 = fun.precision(y, clasif), option = 2)
+    if option == 1 or option == 2:
+        fun.print_to_txt(w = w, gamma = gamma, acc1 = fun.precision(ytr, ctrain), acc2 = fun.precision(yte, ctest), option = option)
     else:
-        fun.print_to_txt(gamma = gamma, acc1 = fun.precision(y, clasif), option = 3)
+        fun.print_to_txt(gamma = gamma, acc1 = fun.precision(ytr, ctrain), option = 3)
 
     os.remove('./ampl_data.dat') # Eliminamos el .dat que le pasamos a AMPL y nos guardamos únicamente
                                  # el de generación. Para mantener el .dat comentar esta línea.
 
 # Error de formato de entrada
 except:
-    print('ERROR EN LA ENTRADA!: Por favor, asegurese de introducir además ' +
+    print('\nERROR EN LA ENTRADA!: Por favor, asegurese de introducir además ' +
           'del archivo ejecutable (EN ESTE ORDEN) la opción, el número de ' +
           'puntos a generar, la seed para la generación de puntos, la nu ' +
           'y un útlimo parámetro que indique como generar los datos:\n\n' +

@@ -1,7 +1,7 @@
+from sklearn import datasets as ds
+from os import getcwd
 import numpy as np
 import os
-from os import getcwd
-from sklearn import datasets as ds
 
 # Epsilon es la tolerancia de error a la hora de comparar números
 eps = 10e-6
@@ -77,6 +77,7 @@ def generate_data(option, num_points, seed, nu, swiss):
         A, y = generate_swiss(num_points, seed)
     else:
         A, y = gensvmdat(num_points, seed)
+
     if option == 1:   write_data(num_points, nu, A, y, 'A')
     elif option == 2: write_data(num_points, nu, A.dot(A.T) + np.eye(len(y))*eps, y, 'K')
     else:
@@ -94,7 +95,7 @@ def generate_data(option, num_points, seed, nu, swiss):
 A partir de la solución para las lambdas(la), las y's, los puntos y la nu,
 devuelve la solución de la w para el caso que utilizamos la formulación dual.
 '''
-def dual_w(la,y,A,nu):
+def dual_w(la, y, A, nu):
     w = np.zeros((1,len(A[0,:])))
     for i in range(len(y)):
         if la[i] > eps and la[i] < nu - eps:
@@ -142,9 +143,9 @@ def dual_classification(la,y,K,nu):
 A partir de los resultados de la optimización con la formulación primal,
 calculamos en que lado del hiperplano está cada punto y le asignamos 1 o -1.
 '''
-def primal_classification(A, w, y, gamma, s):
+def primal_classification(A, w, y, gamma):
     c1 = [1 for i in range(len(y))]
-    for i in range(len(s)):
+    for i in range(len(y)):
         if A[i,:] * w + gamma < eps: c1[i] = -1
 
     return c1
@@ -165,7 +166,7 @@ def precision(y, y_pred):
 '''
 Escribe los resultados en un archivo de texto.
 '''
-def print_to_txt(w = [0], gamma = 0, acc1 = 0, s = 0, option = 1):
+def print_to_txt(w = [0], gamma = 0, acc1 = 0, acc2 = 0, s = 0, option = 1):
     res = open('resultados.txt', 'w')
     if option == 1: res.write('\n + ------------------- RESULTADO DEL PROBLEMA PRIMAL -------------------  +' + '\n\n')
     elif option == 2: res.write('\n + -------------------- RESULTADO DEL PROBLEMA DUAL --------------------  +' + '\n\n')
@@ -175,9 +176,6 @@ def print_to_txt(w = [0], gamma = 0, acc1 = 0, s = 0, option = 1):
         res.write('\nResultado de los pesos w:' + '\n')
         for i in range(len(w)):
             res.write('             ' + str(w[i]) + '\n')
+        res.write('\nLa accuracy de test es: ' + str(acc2*100) + '%.')
 
-    res.write('\nLa accuracy es: ' + str(acc1*100) + '%.' + '\n\n')
-    if option == 1:
-        need_s = int(input("¿Quiere guardar también las s? (Sí -> 1  |  No -> 0):  "))
-        if need_s == 1:
-            res.write('Resultado de los lags s:\n' + str(s) + '\n')
+    res.write('\nLa accuracy de training es: ' + str(acc1*100) + '%.' + '\n\n')
