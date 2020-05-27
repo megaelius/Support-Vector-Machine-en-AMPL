@@ -48,14 +48,12 @@ python3 launch.py 1 250 1234 0.5 0
 
 ## Salida
 
-Al ejecutar el programa, se mostrará por pantalla el valor de la función objetivo en el punto óptimo encontrado y se generará un fichero de texto *resultados.txt* donde se guardan los resultados de las variables del problema de optimización así como las *accuracies*. 
-
-Además, al usar la opción 1 (problema primal) el programa preguntará si se desea guardar el resultado de los *slacks s* en el fichero. El resultado para el ejemplo de entrada anterior, indicando que no se desea guardar los *slacks* seria:
+Al ejecutar el programa, se mostrará por pantalla el valor de la función objetivo en el punto óptimo encontrado y se generará un fichero de texto *resultados.txt* donde se guardan los resultados de las variables del problema de optimización así como las *accuracies*, tanto para training como para test. El resultado para el ejemplo de entrada anterior, indicando que no se desea guardar los *slacks* seria:
 
 ```
-+ ------------------- RESULTADO DEL PROBLEMA PRIMAL -------------------  +
+ + ------------------- RESULTADO DEL PROBLEMA PRIMAL -------------------  +
 
-Resultado de gamma: -4.378653208969144
+Resultado de gamma: -4.378653208969142
 
 Resultado de los pesos w:
              [[2.0443755]]
@@ -63,7 +61,8 @@ Resultado de los pesos w:
              [[2.30687113]]
              [[1.90741462]]
 
-La accuracy es: 89.2%.
+La accuracy de training es: 89.2%.
+La accuracy de test es: 88.0%.
 ```
 
 **Importante**: El *.dat* que se pasa a AMPL se elimina al final del programa. Si se desea mantener el archivo para ver, por ejemplo, el kernel *K* o el formato usado, por favor, comente la línea 83 del código *launch.py*: ```os.remove('./ampl_data.dat')```.
