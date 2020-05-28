@@ -45,10 +45,12 @@ try:
     '''
 
     print("\nCalculando resultados...\n")
-
+    
+    # Generamos los datos de entrenamiento
     Atr, ytr = fun.generate_data(num_points, seed, data_type, False)
     fun.write_ampl(Atr, ytr, nu, option)
 
+    # Si no se usa RBF, generamos datos de test
     if option != 3:
         if data_type != 3:
             random.seed(time.time())
