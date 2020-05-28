@@ -1,6 +1,7 @@
 from sklearn import datasets as ds
 from os import getcwd
 import numpy as np
+import random
 import os
 
 # Epsilon es la tolerancia de error a la hora de comparar números
@@ -62,22 +63,13 @@ def generate_swiss(num_points,seed):
         else: y_binary[i] = -1
     return A, y_binary
 
-
 '''
-Generamos los datos mediante los parámetros principales del programa y los
-escribimos en un archivo de la forma adecuada dependiendo del parámetro option.
-
 Debido a errores numéricos, ampl devuelve que la matriz K no es semidefinida
 positiva, pero en realidad los valores propios supuestamente negativos, son 0.
 Así que sumamos una matriz identidad multiplicada por epsilon para
 corregir esto y hacer que la matriz sea semidefinida positiva.
 '''
-def generate_data(option, num_points, seed, nu, swiss):
-    if swiss:
-        A, y = generate_swiss(num_points, seed)
-    else:
-        A, y = gensvmdat(num_points, seed)
-
+def write_ampl(num_points, A, y, nu, option):
     if option == 1:   write_data(num_points, nu, A, y, 'A')
     elif option == 2: write_data(num_points, nu, A.dot(A.T) + np.eye(len(y))*eps, y, 'K')
     else:
@@ -88,6 +80,34 @@ def generate_data(option, num_points, seed, nu, swiss):
             for j in range(i,m):
                 K[i,j] = K[j,i] = np.exp(- np.linalg.norm(A[i,:] - A[j,:])**2/(2*s2))
         write_data(num_points, nu, K + np.eye(len(y))*eps, y, 'K')
+
+
+def generate_skin(num_points, seed, test):
+    A = np.loadtxt('./Skin_NonSkin.txt', delimiter = '	')
+    y = A[:, A[0].size - 1]
+    A = np.delete(A, A[0].size - 1, 1)
+    random.seed(seed)
+    np.random.shuffle(A)
+    if not test:
+        A = A[:num_points - 1,:]
+        y = A[:num_points - 1,:]
+    else:
+        A = A[num_points:2*num_points - 1,:]
+        y = A[num_points:2*num_points - 1,:]
+    return A, y
+
+
+'''
+Generamos los datos mediante los parámetros principales del programa y los
+escribimos en un archivo de la forma adecuada dependiendo del parámetro option.
+'''
+def generate_data(num_points, seed, dt, test):
+    if dt == 1:
+        A, y = generate_swiss(num_points, seed)
+    elif dt == 2:
+        A, y = gensvmdat(num_points, seed)
+    else:
+        A, y = generate_skin(num_points, seed, test)
     return A, y
 
 
