@@ -37,9 +37,9 @@ La ejecución del código requiere a parte de indicar el archivo ejecutable *lau
 - **data_type**: indica si generamos los puntos con el algoritmo proporcionado
     por el profesor (gensvmdat), con el algoritmo del swiss roll
     (brazo de gitano) de sklearn o usamos la base de datos "skin"
-    1: Para generarlos con gensvmdat (datos linealmente separables)
-    2: Para generarlos con sklearn swiss_roll (datos no separables linealmente)
-    3: Para usar la base de datos "skin"
+    >1: Para generarlos con gensvmdat (datos linealmente separables)
+    >2: Para generarlos con sklearn swiss_roll (datos no separables linealmente)
+    >3: Para usar la base de datos "skin"
   
 Si no se introdujese correctamente la entrada, el programa imprimiria por pantalla un aviso recordando el formato de la entrada. Un ejemplo de entrada, donde cada parámetro corresponde en orden a los indicados arriba, seria:
 
