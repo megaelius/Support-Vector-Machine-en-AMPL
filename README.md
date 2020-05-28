@@ -49,7 +49,7 @@ python3 launch.py 1 250 1234 0.5 1
 
 ## Salida
 
-Al ejecutar el programa, se mostrará por pantalla el valor de la función objetivo en el punto óptimo encontrado y se generará un fichero de texto *resultados.txt* donde se guardan los resultados de las variables del problema de optimización así como las *accuracies*, tanto para training como para test. El resultado para el ejemplo de entrada anterior, indicando que no se desea guardar los *slacks* seria:
+Al ejecutar el programa, se mostrará por pantalla el valor de la función objetivo en el punto óptimo encontrado y se generará un fichero de texto *resultados.txt* donde se guardan los resultados de las variables del problema de optimización así como las *accuracies*, tanto para training como para test. Cabe resaltar que aunque el acierto sobre el conjunto de entrenamiento será siempre igual (los datos se escogen con la *seed* indicada), el acierto sobre los datos de test será diferente en cada ejecución ya que estos se generan o seleccionan con una *seed* aleatoria a través de la función *time*. El resultado para el ejemplo de entrada anterior, indicando que no se desea guardar los *slacks* seria:
 
 ```
  + ------------------- RESULTADO DEL PROBLEMA PRIMAL -------------------  +
