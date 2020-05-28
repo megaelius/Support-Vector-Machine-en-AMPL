@@ -66,4 +66,4 @@ La accuracy de test es: 88.0%.
 La accuracy de training es: 89.2%.
 ```
 
-**Importante**: El *.dat* que se pasa a AMPL se elimina al final del programa. Si se desea mantener el archivo para ver, por ejemplo, el kernel *K* o el formato usado, por favor, comente la línea 109 del código *launch.py*: ```os.remove('./ampl_data.dat')```.
+**Importante**: El *.dat* que se pasa a AMPL se elimina al final del programa. Si se desea mantener el archivo para ver, por ejemplo, el kernel *K* o el formato usado comente la línea 112 del código *launch.py*: ```os.remove('./ampl_data.dat')```.
