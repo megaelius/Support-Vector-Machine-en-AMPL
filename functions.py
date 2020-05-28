@@ -64,6 +64,7 @@ def generate_swiss(num_points,seed):
         else: y_binary[i] = -1
     return A, y_binary
 
+
 '''
 Debido a errores numéricos, ampl devuelve que la matriz K no es semidefinida
 positiva, pero en realidad los valores propios supuestamente negativos, son 0.
@@ -83,6 +84,12 @@ def write_ampl(A, y, nu, option):
         write_data(nu, K + np.eye(len(y))*eps, y, 'K')
 
 
+ '''
+ Con la función generate_skin, leemeos los datos del fichero de texto y los 
+ ordenamos aleatoriamente. Para el conjunto de training cogemos los num_points
+ primeras observaciones mientras que para los datos de test cogemos aleatoriamente
+ a través un batch de num_points datos diferentes a los primeros.
+ '''
 def generate_skin(num_points, seed, test):
     A = np.loadtxt('./Skin_NonSkin.txt', delimiter = '	')
     np.random.seed(seed)
@@ -96,13 +103,14 @@ def generate_skin(num_points, seed, test):
         y = A[start:(start + num_points), 3]
         A = A[start:(start + num_points), 0:3]
 
-    for i in range(len(y)): y[i] = 2*y[i] - 3
-    return A, y
+    for i in range(len(y)): y[i] = 2*y[i] - 3  # Transformamos la variable respuesta
+    return A, y                                # de 1 / 2 a -1 / 1.
 
 
 '''
-Generamos los datos mediante los parámetros principales del programa y los
-escribimos en un archivo de la forma adecuada dependiendo del parámetro option.
+Esta función discierne que tipo de datos quiere generar el usuario y
+devuelve la matriz de datos explicativos y un vector con la variable
+respuesta.
 '''
 def generate_data(num_points, seed, dt, test):
     if dt == 1:
