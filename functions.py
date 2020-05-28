@@ -2,6 +2,7 @@ from sklearn import datasets as ds
 from os import getcwd
 import numpy as np
 import random
+import time
 import os
 
 # Epsilon es la tolerancia de error a la hora de comparar números
@@ -12,22 +13,22 @@ eps = 10e-6
 Recibe como parámetros el número de puntos y las variables y parámetros
 y las escribe en un archivo en el formato legible para AMPL.
 '''
-def write_data(num_points, nu, K, y, laux):
+def write_data(nu, K, y, laux):
         dimensions = len(K[0])
 
         o = open('./ampl_data.dat', 'w')
         if (laux == 'A'): o.write('param n := ' + str(dimensions) + ';\n')
-        o.write('param m := ' + str(num_points) + ';\n' + \
+        o.write('param m := ' + str(len(y)) + ';\n' + \
                 'param nu:= ' + str(nu) + ';\n\n' + \
                 'param ' + laux + ':\n    ')
         for i in range (1, dimensions + 1):
             o.write(str(i) + '     ')
         o.write(':=\n')
-        for i in range(0, num_points):
+        for i in range(0, len(y)):
             o.write(str(i + 1) + ' ' + \
                     str(K[i, :]).replace('[', '').replace(']', '') + '\n')
         o.write(';\n\nparam y :=\n')
-        for i in range(0, num_points):
+        for i in range(0, len(y)):
             o.write(str(i + 1) + ' ' + str(y[i]) +'\n')
         o.write(';')
 
@@ -55,7 +56,7 @@ Se generan num_points puntos con su clase aleatoriamente mediante el método
 del swiss_roll (brazo de gitano).
 '''
 def generate_swiss(num_points,seed):
-    A, y = ds.make_swiss_roll(num_points, 0, seed)
+    A, y = ds.make_swiss_roll(num_points, 2, seed)
     my = np.mean(y)
     y_binary = [0 for i in range(len(y))]
     for i in range(len(y)):
@@ -69,31 +70,33 @@ positiva, pero en realidad los valores propios supuestamente negativos, son 0.
 Así que sumamos una matriz identidad multiplicada por epsilon para
 corregir esto y hacer que la matriz sea semidefinida positiva.
 '''
-def write_ampl(num_points, A, y, nu, option):
-    if option == 1:   write_data(num_points, nu, A, y, 'A')
-    elif option == 2: write_data(num_points, nu, A.dot(A.T) + np.eye(len(y))*eps, y, 'K')
+def write_ampl(A, y, nu, option):
+    if option == 1:   write_data(nu, A, y, 'A')
+    elif option == 2: write_data(nu, A.dot(A.T) + np.eye(len(y))*eps, y, 'K')
     else:
         m = len(y)
-        K = np.zeros((m,m))
+        K = np.zeros((m, m))
         s2 = np.mean(np.var(A,0))
         for i in range(m):
             for j in range(i,m):
                 K[i,j] = K[j,i] = np.exp(- np.linalg.norm(A[i,:] - A[j,:])**2/(2*s2))
-        write_data(num_points, nu, K + np.eye(len(y))*eps, y, 'K')
+        write_data(nu, K + np.eye(len(y))*eps, y, 'K')
 
 
 def generate_skin(num_points, seed, test):
     A = np.loadtxt('./Skin_NonSkin.txt', delimiter = '	')
-    y = A[:, A[0].size - 1]
-    A = np.delete(A, A[0].size - 1, 1)
-    random.seed(seed)
+    np.random.seed(seed)
     np.random.shuffle(A)
     if not test:
-        A = A[:num_points - 1,:]
-        y = A[:num_points - 1,:]
+        y = A[:num_points, 3]
+        A = A[:num_points, 0:3]
     else:
-        A = A[num_points:2*num_points - 1,:]
-        y = A[num_points:2*num_points - 1,:]
+        random.seed(time.time())
+        start = random.randint(num_points, len(A) - num_points - 1)
+        y = A[start:(start + num_points), 3]
+        A = A[start:(start + num_points), 0:3]
+
+    for i in range(len(y)): y[i] = 2*y[i] - 3
     return A, y
 
 
