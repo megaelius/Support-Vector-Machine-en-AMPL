@@ -114,9 +114,9 @@ respuesta.
 '''
 def generate_data(num_points, seed, dt, test):
     if dt == 1:
-        A, y = generate_swiss(num_points, seed)
-    elif dt == 2:
         A, y = gensvmdat(num_points, seed)
+    elif dt == 2:
+        A, y = generate_swiss(num_points, seed)
     else:
         A, y = generate_skin(num_points, seed, test)
     return A, y
