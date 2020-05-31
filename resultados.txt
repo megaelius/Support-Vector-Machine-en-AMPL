@@ -1,7 +1,13 @@
 
- + -------------------- RESULTADO DEL PROBLEMA RBF --------------------  +
+ + ------------------- RESULTADO DEL PROBLEMA PRIMAL -------------------  +
 
-Resultado de gamma: [[-0.00780889]]
+Resultado de gamma: 9.236672690373679
 
-La accuracy es: 92.0%.
+Resultado de los pesos w:
+             [[0.12468736]]
+             [[-0.12918124]]
+             [[-0.03612284]]
+
+La accuracy de test es: 96.0%.
+La accuracy de training es: 98.0%.
 

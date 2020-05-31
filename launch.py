@@ -8,8 +8,8 @@ import os
 
 
 # Path donde está AMPL en nuestro ordenador
-ampl = AMPL(Environment('/home/alex/AMPL/ampl_linux-intel64'))
-#ampl = AMPL(Environment('/home/elias/Escritorio/uni/2º/OM/ampl_linux-intel64'))
+#ampl = AMPL(Environment('/home/alex/AMPL/ampl_linux-intel64'))
+ampl = AMPL(Environment('/home/elias/Escritorio/uni/2º/OM/ampl_linux-intel64'))
 # Escogemos el solver cplex
 ampl.setOption('solver', 'cplex')
 
@@ -48,7 +48,6 @@ try:
 
     Atr, ytr = fun.generate_data(num_points, seed, data_type, False)
     fun.write_ampl(Atr, ytr, nu, option)
-
     if option != 3:
         if data_type != 3:
             random.seed(time.time())
@@ -98,7 +97,6 @@ try:
 
     if option != 3:
         ctest = fun.primal_classification(Ate, w, yte, gamma)
-
     '''
     Imprimimos los resultados en el archivo resultados.txt
     '''
