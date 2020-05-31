@@ -1,13 +1,14 @@
 
  + ------------------- RESULTADO DEL PROBLEMA PRIMAL -------------------  +
 
-Resultado de gamma: 9.236672690373679
+Resultado de gamma: -2.707844705234401
 
 Resultado de los pesos w:
-             [[0.12468736]]
-             [[-0.12918124]]
-             [[-0.03612284]]
+             [[1.19245228]]
+             [[1.78431899]]
+             [[1.26205833]]
+             [[1.31228]]
 
-La accuracy de test es: 96.0%.
-La accuracy de training es: 98.0%.
+La accuracy de test es: 98.0%.
+La accuracy de training es: 92.0%.
 

@@ -45,15 +45,12 @@ try:
     '''
 
     print("\nCalculando resultados...\n")
-    
+
     # Generamos los datos de entrenamiento
     Atr, ytr = fun.generate_data(num_points, seed, data_type, False)
     fun.write_ampl(Atr, ytr, nu, option)
-<<<<<<< HEAD
-=======
 
     # Si no se usa RBF, generamos datos de test
->>>>>>> 3142d92bc1f2090815ca48c299d22840d2e478d7
     if option != 3:
         if data_type != 3:
             random.seed(time.time())
@@ -111,7 +108,7 @@ try:
     else:
         fun.print_to_txt(gamma = gamma, acc1 = fun.precision(ytr, ctrain), option = 3)
 
-    os.remove('./ampl_data.dat')
+    #os.remove('./ampl_data.dat')
     # Eliminamos el .dat que le pasamos a AMPL y nos guardamos únicamente
     # el de generación. Para mantener el .dat comentar esta línea.
 

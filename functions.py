@@ -15,7 +15,7 @@ y las escribe en un archivo en el formato legible para AMPL.
 '''
 def write_data(nu, K, y, laux):
         dimensions = len(K[0])
-
+        print(dimensions)
         o = open('./ampl_data.dat', 'w')
         if (laux == 'A'): o.write('param n := ' + str(dimensions) + ';\n')
         o.write('param m := ' + str(len(y)) + ';\n' + \
@@ -85,7 +85,7 @@ def write_ampl(A, y, nu, option):
 
 
 '''
-Con la función generate_skin, leemeos los datos del fichero de texto y los 
+Con la función generate_skin, leemeos los datos del fichero de texto y los
 ordenamos aleatoriamente. Para el conjunto de training cogemos los num_points
 primeras observaciones mientras que para los datos de test cogemos aleatoriamente
 a través un batch de num_points datos diferentes a los primeros.
@@ -115,11 +115,7 @@ respuesta.
 def generate_data(num_points, seed, dt, test):
     if dt == 1:
         A, y = gensvmdat(num_points, seed)
-<<<<<<< HEAD
-    if dt == 2:
-=======
     elif dt == 2:
->>>>>>> 3142d92bc1f2090815ca48c299d22840d2e478d7
         A, y = generate_swiss(num_points, seed)
     else:
         A, y = generate_skin(num_points, seed, test)
