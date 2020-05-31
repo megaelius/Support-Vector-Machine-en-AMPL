@@ -34,21 +34,22 @@ La ejecución del código requiere a parte de indicar el archivo ejecutable *lau
 - **num_points**: número de puntos a generar
 - **seed**: semilla para la generación aleatoria del dataset
 - **nu**: parámetro de la formulación del problema SVM
-- **swiss**: indica si generamos los puntos con el algoritmo del swiss roll
-         (brazo de gitano) de sklearn o el algoritmo proporcionado
-         por el profesor (gensvmdat)
-    >0: Para generar los puntos con gensvmdat (separación lineal)<br/>
-    >1: Para generar los puntos con sklearn swiss_roll (separación no lineal)<br/>
+- **data_type**: indica si generamos los puntos con el algoritmo proporcionado
+    por el profesor (gensvmdat), con el algoritmo del swiss roll
+    (brazo de gitano) de sklearn o usamos la base de datos "skin"
+    >1: Para generarlos con gensvmdat (datos linealmente separables)<br/>
+    >2: Para generarlos con sklearn swiss_roll (datos no separables linealmente)<br/>
+    >3: Para usar la base de datos "skin"<br/>
   
 Si no se introdujese correctamente la entrada, el programa imprimiria por pantalla un aviso recordando el formato de la entrada. Un ejemplo de entrada, donde cada parámetro corresponde en orden a los indicados arriba, seria:
 
 ```
-python3 launch.py 1 250 1234 0.5 0
+python3 launch.py 1 250 1234 0.5 1
 ```
 
 ## Salida
 
-Al ejecutar el programa, se mostrará por pantalla el valor de la función objetivo en el punto óptimo encontrado y se generará un fichero de texto *resultados.txt* donde se guardan los resultados de las variables del problema de optimización así como las *accuracies*, tanto para training como para test. El resultado para el ejemplo de entrada anterior, indicando que no se desea guardar los *slacks* seria:
+Al ejecutar el programa, se mostrará por pantalla el valor de la función objetivo en el punto óptimo encontrado y se generará un fichero de texto *resultados.txt* donde se guardan los resultados de las variables del problema de optimización así como las *accuracies*, tanto para training como para test. Cabe resaltar que aunque el acierto sobre el conjunto de entrenamiento será siempre igual (los datos se escogen con la *seed* indicada), el acierto sobre los datos de test será diferente en cada ejecución ya que estos se generan o seleccionan con una *seed* aleatoria a través de la función *time*. El resultado para el ejemplo de entrada anterior, indicando que no se desea guardar los *slacks* seria:
 
 ```
  + ------------------- RESULTADO DEL PROBLEMA PRIMAL -------------------  +
@@ -65,4 +66,4 @@ La accuracy de test es: 88.0%.
 La accuracy de training es: 89.2%.
 ```
 
-**Importante**: El *.dat* que se pasa a AMPL se elimina al final del programa. Si se desea mantener el archivo para ver, por ejemplo, el kernel *K* o el formato usado, por favor, comente la línea 83 del código *launch.py*: ```os.remove('./ampl_data.dat')```.
+**Importante**: El *.dat* que se pasa a AMPL se elimina al final del programa. Si se desea mantener el archivo para ver, por ejemplo, el kernel *K* o el formato usado comente la línea 112 del código *launch.py*: ```os.remove('./ampl_data.dat')```.
