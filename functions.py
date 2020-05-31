@@ -84,12 +84,12 @@ def write_ampl(A, y, nu, option):
         write_data(nu, K + np.eye(len(y))*eps, y, 'K')
 
 
- '''
- Con la función generate_skin, leemeos los datos del fichero de texto y los 
- ordenamos aleatoriamente. Para el conjunto de training cogemos los num_points
- primeras observaciones mientras que para los datos de test cogemos aleatoriamente
- a través un batch de num_points datos diferentes a los primeros.
- '''
+'''
+Con la función generate_skin, leemeos los datos del fichero de texto y los 
+ordenamos aleatoriamente. Para el conjunto de training cogemos los num_points
+primeras observaciones mientras que para los datos de test cogemos aleatoriamente
+a través un batch de num_points datos diferentes a los primeros.
+'''
 def generate_skin(num_points, seed, test):
     A = np.loadtxt('./Skin_NonSkin.txt', delimiter = '	')
     np.random.seed(seed)
