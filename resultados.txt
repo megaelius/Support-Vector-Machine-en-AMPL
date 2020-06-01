@@ -8,6 +8,6 @@ Resultado de los pesos w:
              [[0.]]
              [[0.]]
 
-La accuracy de test es: 25.2%.
-La accuracy de training es: 16.0%.
+La accuracy de test es: 56.00000000000001%.
+La accuracy de training es: 50.0%.
 

@@ -176,7 +176,7 @@ calculamos en que lado del hiperplano está cada punto y le asignamos 1 o -1.
 def primal_classification(A, w, y, gamma):
     c1 = [1 for i in range(len(y))]
     for i in range(len(y)):
-        if A[i,:] * w + gamma < eps: c1[i] = -1
+        if np.dot(A[i,:],w) + gamma < eps: c1[i] = -1
 
     return c1
 
