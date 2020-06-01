@@ -15,7 +15,6 @@ y las escribe en un archivo en el formato legible para AMPL.
 '''
 def write_data(nu, K, y, laux):
         dimensions = len(K[0])
-        print(dimensions)
         o = open('./ampl_data.dat', 'w')
         if (laux == 'A'): o.write('param n := ' + str(dimensions) + ';\n')
         o.write('param m := ' + str(len(y)) + ';\n' + \
