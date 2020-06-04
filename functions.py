@@ -15,6 +15,7 @@ y las escribe en un archivo en el formato legible para AMPL.
 '''
 def write_data(nu, K, y, laux):
         dimensions = len(K[0])
+
         o = open('./ampl_data.dat', 'w')
         if (laux == 'A'): o.write('param n := ' + str(dimensions) + ';\n')
         o.write('param m := ' + str(len(y)) + ';\n' + \
@@ -76,7 +77,7 @@ def write_ampl(A, y, nu, option):
     else:
         m = len(y)
         K = np.zeros((m, m))
-        s2 = np.mean(np.var(A,0))
+        s2 = np.mean(np.var(A, 0))
         for i in range(m):
             for j in range(i,m):
                 K[i,j] = K[j,i] = np.exp(- np.linalg.norm(A[i,:] - A[j,:])**2/(2*s2))
@@ -150,19 +151,24 @@ A partir de los resultados de la optimización con la formulación dual
 se calculan el parámetro de intersección (gamma) y la clasificación
 de cada punto (1 o -1).
 '''
-def dual_classification(la,y,K,nu):
+def dual_classification(la, y, Atr, nu, option, Ate):
+    if option == 3: s2 = np.mean(np.var(Atr, 0))
     m = len(y)
     c = [1 for i in range(m)]
     index_sv = support_vector(la, nu)
     #Calculo gamma
     gamma = 1/y[index_sv]
     for i in range(m):
-        gamma = gamma - la[i]*y[i]*K[i,index_sv]
+        if option == 3: K = np.exp(- np.linalg.norm(Atr[index_sv, :] - Atr[i, :])**2/(2*s2))
+        else: K = Atr[index_sv, :].dot(Atr[i, :])
+        gamma = gamma - la[i]*y[i]*K
     # Miramos en que lado del hiperplano se encuentra el punto.
     for i in range(m):
         wtphi = 0
         for j in range(m):
-            wtphi = wtphi + la[j]*y[j]*K[j,i]
+            if option == 3: K = np.exp(- np.linalg.norm(Ate[i,:] - Atr[j,:])**2/(2*s2))
+            else: K = Ate[i, :].dot(Atr[j, :])
+            wtphi = wtphi + la[j]*y[j]*K
 
         if wtphi + gamma < eps: c[i] = -1
 
@@ -176,7 +182,7 @@ calculamos en que lado del hiperplano está cada punto y le asignamos 1 o -1.
 def primal_classification(A, w, y, gamma):
     c1 = [1 for i in range(len(y))]
     for i in range(len(y)):
-        if np.dot(A[i,:],w) + gamma < eps: c1[i] = -1
+        if A[i,:] * w + gamma < eps: c1[i] = -1
 
     return c1
 
@@ -206,6 +212,5 @@ def print_to_txt(w = [0], gamma = 0, acc1 = 0, acc2 = 0, s = 0, option = 1):
         res.write('\nResultado de los pesos w:' + '\n')
         for i in range(len(w)):
             res.write('             ' + str(w[i]) + '\n')
-        res.write('\nLa accuracy de test es: ' + str(acc2*100) + '%.')
-
+    res.write('\nLa accuracy de test es: ' + str(acc2*100) + '%.')
     res.write('\nLa accuracy de training es: ' + str(acc1*100) + '%.' + '\n\n')
